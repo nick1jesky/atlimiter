@@ -46,6 +46,15 @@ Only one goroutine successfully updates the refill timestamp using CAS while oth
 * **Microservices** with strict QoS requirements
 * **Load testing** frameworks needing precise rate control
 
+## Benchmarks
+
+| Benchmark name                 |       (1) |             (2) |          (3) |             (4) |
+| ------------------------------ | --------: | --------------: | -----------: | --------------: |
+| Benchmark_Allow/atlimiter	| 166360885 | 7.048 ns/op | 0 B/op | 0 allocs/op |
+| Benchmark_Allow/rate.limiter | 27014918 | 40.31 ns/op | 0 B/op | 0 allocs/op |
+| Benchmark_Allow_Parallel/atlimiter | 294246488 | 3.940 ns/op | 0 B/op | 0 allocs/op |
+| Benchmark_Allow_Parallel/rate.limiter | 15988948 | 77.15 ns/op | 0 B/op | 0 allocs/op |
+
 ## Instalation
 
 ```bash
