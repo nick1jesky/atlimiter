@@ -194,7 +194,7 @@ func Benchmark_Allow(b *testing.B) {
 		}
 	})
 	fmt.Println(`b.Run("rate.limiter", func(b *testing.B) {
-		limiter := rate.NewLimiter(1000000, 1000000)
+		limiter := rate.NewLimiter(1000000, 0)
 
 		for b.Loop() {
 			limiter.Allow()
@@ -213,7 +213,7 @@ func Benchmark_Allow_Parallel(b *testing.B) {
 		})
 	})
 	fmt.Println(`b.Run("rate.limiter", func(b *testing.B) {
-		limiter := rate.NewLimiter(1000000, 1000000)
+		limiter := rate.NewLimiter(1000000, 0)
 		b.ResetTimer()
 		b.RunParallel(func(pb *testing.PB) {
 			for pb.Next() {
