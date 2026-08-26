@@ -6,7 +6,7 @@ ATLimiter is a high-performance rate limiter implementation in Go that utilizes 
 
 It operates on three fundamental params:
 
-* **maxRPS** – maximum requests per second
+* **maxRPS** - maximum requests per second
 * **capacity** – maximum burst capacity calculated as `maxRPS * capacityFactor`
 * **tokens** – current available tokens managed through atomic operations
 
@@ -51,3 +51,21 @@ func (r *ATLimiter) calculateTokenRefill() {
         }
     }
 }
+```
+
+## Benchmarks
+
+| Benchmark name                 |       (1) |             (2) |          (3) |             (4) |
+| ------------------------------ | --------: | --------------: | -----------: | --------------: |
+| Benchmark_Allow/atlimiter	| 58644720 | 39.18 ns/op | 0 B/op | 0 allocs/op |
+| Benchmark_Allow/rate.limiter | 16538538 | 71.23 ns/op | 0 B/op | 0 allocs/op |
+| Benchmark_Allow/uber.ratelimit | 668773 | 1894 ns/op ns/op | 0 B/op | 0 allocs/op |
+| Benchmark_Allow_Parallel/atlimiter | 22051213 | 46.61 ns/op | 0 B/op | 0 allocs/op |
+| Benchmark_Allow_Parallel/rate.limiter | 8451982 | 146.8 ns/op | 0 B/op | 0 allocs/op |
+| Benchmark_Allow_Parallel/uber.ratelimit | 239368 | 4915 ns/op | 0 B/op | 0 allocs/op |
+
+## Instalation
+
+```bash
+go get github.com/nick1jesky/atlimiter
+```

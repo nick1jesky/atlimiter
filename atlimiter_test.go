@@ -246,15 +246,13 @@ func TestPrecision(t *testing.T) {
 	var wg sync.WaitGroup
 	workers := 10
 	for range workers {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			for time.Since(start) < duration {
 				if limiter.Allow() {
 					count.Add(1)
 				}
 			}
-		}()
+		})
 	}
 	wg.Wait()
 
@@ -265,74 +263,6 @@ func TestPrecision(t *testing.T) {
 		t.Errorf("Precision off: expected ~%d, got %d", expected, count.Load())
 	}
 }
-
-// func TestPerformanceComparison(t *testing.T) {
-// 	const iterations = 1_000_000
-// 	const concurrency = 10
-
-// 	// atlimiter
-// 	l1 := NewLimiter(1_000_000, 1.0)
-// 	start := time.Now()
-// 	var wg sync.WaitGroup
-// 	for range concurrency {
-// 		wg.Go(func() {
-// 			for range iterations / concurrency {
-// 				l1.Allow()
-// 			}
-// 		})
-// 	}
-// 	wg.Wait()
-// 	dur1 := time.Since(start)
-
-// 	// rate.Limiter
-// 	l2 := rate.NewLimiter(rate.Limit(1_000_000), 1)
-// 	start = time.Now()
-// 	wg = sync.WaitGroup{}
-// 	for range concurrency {
-// 		wg.Go(func() {
-// 			for range iterations / concurrency {
-// 				l2.Allow()
-// 			}
-// 		})
-// 	}
-// 	wg.Wait()
-// 	dur2 := time.Since(start)
-
-// 	// uber.ratelimit
-// 	l3 := ratelimit.New(1_000_000)
-// 	start = time.Now()
-// 	wg = sync.WaitGroup{}
-// 	for range concurrency {
-// 		wg.Go(func() {
-// 			for range iterations / concurrency {
-// 				l3.Take()
-// 			}
-// 		})
-// 	}
-// 	wg.Wait()
-// 	dur3 := time.Since(start)
-
-// 	t.Logf("ATLimiter:       %v", dur1)
-// 	t.Logf("rate.Limiter:    %v", dur2)
-// 	t.Logf("uber.ratelimit:  %v", dur3)
-
-// 	fastest := "ATLimiter"
-// 	fastestDur := dur1
-// 	if dur2 < fastestDur {
-// 		fastest = "rate.Limiter"
-// 		fastestDur = dur2
-// 	}
-// 	if dur3 < fastestDur {
-// 		fastest = "uber.ratelimit"
-// 		fastestDur = dur3
-// 	}
-// 	t.Logf("Fastest: %s (%v)", fastest, fastestDur)
-
-// 	if dur1 > 0 {
-// 		t.Logf("ATLimiter vs rate.Limiter:  %.2fx faster", float64(dur2)/float64(dur1))
-// 		t.Logf("ATLimiter vs uber.ratelimit: %.2fx faster", float64(dur3)/float64(dur1))
-// 	}
-// }
 
 // Benchmarks
 func Benchmark_Allow(b *testing.B) {
